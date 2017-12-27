@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paopaoxiong.ppx.mapper.system.MenuMapper">
+    <resultMap id="MenuResultMap" type="com.paopaoxiong.ppx.model.system.Menu">
+        <id column="id" property="id"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="name" property="name"/>
+        <result column="url" property="url"/>
+        <result column="permission" property="permission"/>
+        <result column="type" property="type"/>
+        <result column="icon" property="icon"/>
+        <result column="status" property="status"/>
+        <result column="order_num" property="orderNum"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      id,parent_id,name, url,permission,type, icon,status,order_num,create_user,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') create_time ,update_user,DATE_FORMAT(update_time,'%Y-%m-%d %H:%i:%s') update_time
+    </sql>
+
+    <sql id="query_where_condition">
+        <where>
+            <if test="id != null and id > 0 ">id = #{id}</if>
+            <if test="parentId != null and parentId != '' ">and parent_id = #{parentId}</if>
+            <if test="name != null and name != '' ">and name = #{name}</if>
+            <if test="url != null and url != '' ">and url = #{url}</if>
+            <if test="permission != null and permission != '' ">and permission = #{permission}</if>
+            <if test="type != null and type != '' ">and type = #{type}</if>
+            <if test="orderNum != null and orderNum != '' ">and order_num = #{orderNum}</if>
+            <if test="status != null and status != '' ">and status = #{status}</if>
+            <if test="createUser != null and createUser != '' ">and create_user = #{createUser}</if>
+            <if test="createTime != null and createTime != '' ">and create_time = #{createTime}</if>
+            <if test="updateUser != null and updateUser != '' ">and update_user = #{updateUser}</if>
+            <if test="updateTime != null and updateTime != '' ">and update_time = #{updateTime}</if>
+        </where>
+    </sql>
+
+
+    <select id="queryAllMenu" parameterType="com.paopaoxiong.ppx.model.system.Menu" resultMap="MenuResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from sys_menu
+        <include refid="query_where_condition"/>
+    </select>
+
+    <select id="queryAllMenuByUserId" resultMap="MenuResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM sys_menu m
+        WHERE m.id IN
+        (SELECT rm.menu_id FROM sys_role_menu rm WHERE rm.role_id IN(SELECT id FROM sys_role WHERE id IN(SELECT role_id FROM sys_user_role WHERE user_id = #{userId}) ))
+
+    </select>
+
+    <insert id="add" parameterType="com.paopaoxiong.ppx.model.system.Menu" >
+        INSERT INTO sys_menu
+        (
+        parent_id,
+        name,
+        url,
+        permission,
+        type,
+        icon,
+        status,
+        order_num,
+        create_user,
+        create_user,
+        update_user,
+        update_time
+        )
+        VALUES
+        (
+        #{parentId},
+        #{name},
+        #{url},
+        #{permission},
+        #{type},
+        #{icon},
+        #{status},
+        #{orderNum},
+        #{createUser},
+        sysdate(),
+        #{updateUser},
+        sysdate()
+        )
+    </insert>
+
+</mapper>

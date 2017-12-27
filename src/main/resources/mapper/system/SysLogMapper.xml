@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paopaoxiong.ppx.mapper.system.SysLogMapper">
+    <resultMap id="MenuResultMap" type="com.paopaoxiong.ppx.model.system.SysLog">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId" />
+        <result column="module" property="module" />
+        <result column="description" property="description" />
+        <result column="time" property="time" />
+        <result column="method" property="method" />
+        <result column="params" property="params" />
+        <result column="ip" property="ip" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <insert id="add" parameterType="com.paopaoxiong.ppx.model.system.SysLog">
+        INSERT INTO sys_log (
+            user_id,
+            module,
+            description,
+            time,
+            method,
+            params,
+            ip,
+            create_time
+        )
+        VALUES
+        (
+            #{userId},
+            #{module},
+            #{description},
+            #{time},
+            #{method},
+            #{params},
+            #{ip},
+            sysdate()
+        )
+    </insert>
+
+</mapper>
