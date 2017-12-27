@@ -72,4 +72,8 @@ public class MenuController {
         }
         return resultInfo;
     }
+
+    public void delete(){
+
+    }
 }
