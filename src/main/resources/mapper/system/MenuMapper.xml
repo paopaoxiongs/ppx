@@ -90,4 +90,14 @@
         )
     </insert>
 
+    <select id="getMenuById" parameterType="java.lang.Integer" resultMap="MenuResultMap">
+      SELECT
+        <include refid="Base_Column_List" />
+      FROM sys_menu WHERE id = #{id};
+    </select>
+
+    <delete id="delete" parameterType="java.lang.Integer" >
+        DELETE FROM sys_menu WHERE id = #{id}
+    </delete>
+
 </mapper>

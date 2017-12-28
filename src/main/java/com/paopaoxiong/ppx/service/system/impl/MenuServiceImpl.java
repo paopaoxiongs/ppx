@@ -28,4 +28,14 @@ public class MenuServiceImpl implements MenuService {
     public void add(Menu menu) {
         menuMapper.add(menu);
     }
+
+    @Override
+    public Menu getMenuById(Integer id) {
+        return menuMapper.getMenuById(id);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        menuMapper.delete(id);
+    }
 }

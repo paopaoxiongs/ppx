@@ -11,4 +11,8 @@ public interface MenuService {
     public List<Menu> queryAllMenuByUserId(Integer userId);
 
     public void add(Menu menu);
+
+    public Menu getMenuById(Integer id);
+
+    public void delete(Integer id);
 }
