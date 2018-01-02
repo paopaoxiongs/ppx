@@ -49,7 +49,7 @@
         remark,
         status,
         create_user,
-        create_user,
+        create_time,
         update_user,
         update_time
         )
@@ -66,4 +66,7 @@
         )
     </insert>
 
+    <delete id="delete" parameterType="java.lang.Integer">
+      DELETE  FROM  sys_role WHERE  id = #{id}
+    </delete>
 </mapper>

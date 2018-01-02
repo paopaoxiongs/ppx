@@ -25,7 +25,7 @@ import java.util.Map;
  * @Date 2017/11/17
  *
  */
-@Configuration
+//@Configuration
 public class ShiroConfiguration {
 
     /**

@@ -6,6 +6,7 @@ import com.paopaoxiong.ppx.common.ResultInfo;
 import com.paopaoxiong.ppx.model.system.Role;
 import com.paopaoxiong.ppx.service.system.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ public class RoleController {
 
     @Autowired
     private RoleService roleService;
+
 
     @RequestMapping("/list")
     public ResultInfo getRoleList(Role role,
@@ -52,6 +54,19 @@ public class RoleController {
             resultInfo.setData(Collections.EMPTY_LIST);
             resultInfo.setMessage("失败,"+e.getMessage());
             resultInfo.setSuccess(false);
+        }
+        return resultInfo;
+    }
+
+    @RequestMapping("/delete/{id}")
+    public ResultInfo delete(@PathVariable Integer id){
+        ResultInfo resultInfo = new ResultInfo();
+        try {
+            roleService.delete(id);
+        }catch (Exception e){
+            resultInfo.setMessage("删除失败,"+e.getMessage());
+            resultInfo.setSuccess(false);
+            resultInfo.setData("");
         }
         return resultInfo;
     }

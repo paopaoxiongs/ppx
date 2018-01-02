@@ -9,4 +9,6 @@ public interface RoleService {
     public List<Role> queryAllRole(Role role);
 
     public void add(Role role);
+
+    public void delete(Integer id);
 }
