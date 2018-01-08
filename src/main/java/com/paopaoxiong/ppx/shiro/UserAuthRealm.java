@@ -32,6 +32,10 @@ public class UserAuthRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         User user = userService.queryUserByAccount((String) principal.getPrimaryPrincipal());
         SecurityUtils.getSubject().getSession().setAttribute( String.valueOf( user.getId() ), SecurityUtils.getSubject().getPrincipal() );
+
+        if("admin".equals(user.getAccount())){//超级管理员
+
+        }
         //赋予角色
         List<Role> roles = user.getRoles();
         for(Role role: roles){

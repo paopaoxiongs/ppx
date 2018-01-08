@@ -38,6 +38,15 @@ spring:
     filters: stat,wall,slf4j
 
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    pool:
+      max-active: 8
+      max-wait: -1
+      max-idle: 8
+    timeout: 0
 mybatis:
   type-aliases-package: com.paopaoxiong.ppx.model
   mapper-locations: classpath:mapper/*/*Mapper.xml
@@ -48,4 +57,6 @@ mybatis:
 
 logging:
   level: debug
+
+  ###redis
 
