@@ -11,4 +11,6 @@ public interface UserService {
     public User queryUserByAccount(String account);
 
     public void add(User user);
+
+    public void retry(User user);
 }

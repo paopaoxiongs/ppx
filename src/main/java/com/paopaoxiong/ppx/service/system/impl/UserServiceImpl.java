@@ -28,4 +28,9 @@ public class UserServiceImpl implements UserService {
     public void add(User user) {
         userMapper.add(user);
     }
+
+    @Override
+    public void retry(User user) {
+        if(user == null) throw new RuntimeException();
+    }
 }
