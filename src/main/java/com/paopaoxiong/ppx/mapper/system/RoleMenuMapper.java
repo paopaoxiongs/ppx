@@ -9,4 +9,10 @@ import java.util.List;
 public interface RoleMenuMapper {
 
     public List<RoleMenu> queryAllRoleMenu(RoleMenu roleMenu);
+
+    public void removeByRoleId(Integer roleId);
+
+    public void batchSave(List<RoleMenu> rms);
+
+    public List<Integer> getMenuIdByRoleId(Integer roleId);
 }

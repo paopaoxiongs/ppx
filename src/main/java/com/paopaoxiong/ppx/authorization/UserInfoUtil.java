@@ -12,4 +12,9 @@ public class UserInfoUtil{
             User user = (User) SecurityUtils.getSubject().getSession().getAttribute( CURRENT_USER );
             return user;
         }
+
+        public static Integer getUserId(){
+            User user = (User) SecurityUtils.getSubject().getSession().getAttribute( CURRENT_USER );
+            return user.getId();
+        }
 }

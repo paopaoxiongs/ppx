@@ -9,4 +9,10 @@ import java.util.List;
 public interface UserRoleMapper {
 
     public List<UserRole> queryAllUserRole(UserRole userRole);
+
+    public void removeByUserId(Integer userId);
+
+	public void batchSave(List<UserRole> list);
+
+	public List<Integer> getRoleIdListByUserId(Integer userId);
 }

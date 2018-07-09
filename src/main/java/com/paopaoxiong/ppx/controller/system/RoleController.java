@@ -6,67 +6,96 @@ import com.paopaoxiong.ppx.common.ResultInfo;
 import com.paopaoxiong.ppx.model.system.Role;
 import com.paopaoxiong.ppx.service.system.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/sys/role")
 public class RoleController {
 
     @Autowired
     private RoleService roleService;
 
+    @GetMapping("/page")
+    public String role() {
+        return "system/role/role";
+    }
 
-    @RequestMapping("/list")
-    public ResultInfo getRoleList(Role role,
-                                  @RequestParam(required = false, defaultValue = "1") int pageIndex,
-                                  @RequestParam(required = false, defaultValue = "10") int pageSize){
+    @GetMapping("/list")
+    @ResponseBody()
+    public List<Role> getRoleList(){
+        List<Role> list = new ArrayList<>();
+        try {
+            list = roleService.queryAllRole(null);
+        }catch (Exception e){
+
+        }
+        return list;
+    }
+
+    @GetMapping("/add")
+    public String add(){
+        return "system/role/addRole";
+    }
+
+    /**
+     * 保存角色
+     * @param role
+     * @return
+     */
+    @PostMapping("/save")
+    @ResponseBody()
+    public ResultInfo save(Role role) {
         ResultInfo resultInfo = new ResultInfo();
         try {
-            PageHelper.startPage(pageIndex,pageSize);
-            List<Role> list = roleService.queryAllRole(role);
-            PageInfo<Role> pageInfo = new PageInfo<>(list);
-            resultInfo.setData(pageInfo);
-            resultInfo.setMessage("成功");
-            resultInfo.setSuccess(true);
+            roleService.save(role);
+            resultInfo.setMessage("操作成功");
+            resultInfo.setCode(200);
         }catch (Exception e){
+            resultInfo.setMessage("保存失败,"+e.getMessage());
             resultInfo.setSuccess(false);
-            resultInfo.setData(Collections.EMPTY_LIST);
-            resultInfo.setMessage("获取失败，"+e.getMessage());
         }
         return resultInfo;
     }
 
-    @RequestMapping("/add")
-    public ResultInfo add(Role role){
-        ResultInfo resultInfo = new ResultInfo();
-        try {
-            roleService.add(role);
-            resultInfo.setData(Collections.EMPTY_LIST);
-            resultInfo.setMessage("成功");
-            resultInfo.setSuccess(true);
-        }catch (Exception e){
-            resultInfo.setData(Collections.EMPTY_LIST);
-            resultInfo.setMessage("失败,"+e.getMessage());
-            resultInfo.setSuccess(false);
-        }
-        return resultInfo;
-    }
-
-    @RequestMapping("/delete/{id}")
-    public ResultInfo delete(@PathVariable Integer id){
+    @PostMapping("/remove")
+    @ResponseBody()
+    public ResultInfo remove(Integer id){
         ResultInfo resultInfo = new ResultInfo();
         try {
             roleService.delete(id);
+            resultInfo.setMessage("操作成功");
+            resultInfo.setCode(200);
         }catch (Exception e){
             resultInfo.setMessage("删除失败,"+e.getMessage());
             resultInfo.setSuccess(false);
-            resultInfo.setData("");
+        }
+        return resultInfo;
+    }
+
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable("id") Integer id, Model model) {
+        Role role = roleService.get(id);
+        model.addAttribute("role", role);
+        return "system/role/editRole";
+    }
+
+    @PostMapping("/update")
+    @ResponseBody()
+    public ResultInfo update(Role role) {
+        ResultInfo resultInfo = new ResultInfo();
+        try {
+            roleService.update(role);
+            resultInfo.setMessage("操作成功");
+            resultInfo.setCode(200);
+        }catch (Exception e){
+            resultInfo.setMessage("更新失败,"+e.getMessage());
+            resultInfo.setSuccess(false);
         }
         return resultInfo;
     }

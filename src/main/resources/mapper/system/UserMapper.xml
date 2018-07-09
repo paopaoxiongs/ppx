@@ -54,6 +54,9 @@
         <include refid="query_where_condition"/>
     </select>
 
+    <select id="get" parameterType="java.lang.Integer" resultType="com.paopaoxiong.ppx.model.system.User">
+        SELECT <include refid="Base_Column_List" /> FROM sys_user WHERE id = #{userId}
+    </select>
 
     <select id="queryUserByAccount" resultMap="UserResultMap">
         SELECT
@@ -79,7 +82,7 @@
         WHERE account = #{account}
     </select>
 
-    <insert id="add" parameterType="com.paopaoxiong.ppx.model.system.User">
+    <insert id="add" keyProperty="id" useGeneratedKeys="true" parameterType="com.paopaoxiong.ppx.model.system.User">
         INSERT INTO sys_user (
             account,
             username,
@@ -108,4 +111,26 @@
             sysdate()
         )
     </insert>
+
+    <update id="update" parameterType="com.paopaoxiong.ppx.model.system.User">
+        UPDATE sys_user SET
+        <trim suffixOverrides=",">
+            account = #{account},
+            username = #{username},
+            password = #{password},
+            salt = #{salt},
+            email = #{email},
+            mobile = #{mobile},
+            status = #{status},
+            create_user = #{createUser},
+            create_time = #{createTime},
+            update_user = #{updateUser},
+            update_time = #{updateTime}
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        DELETE  FROM  sys_user WHERE  id = #{id}
+    </delete>
 </mapper>

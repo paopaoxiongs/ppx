@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Menu implements Serializable{
 
-    private Integer id;
+    private Integer menuId;
 
     private Integer parentId;
 
@@ -31,12 +31,12 @@ public class Menu implements Serializable{
 
     private Date updateTime;
 
-    public Integer getId() {
-        return id;
+    public Integer getMenuId() {
+        return menuId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setMenuId(Integer menuId) {
+        this.menuId = menuId;
     }
 
     public Integer getParentId() {

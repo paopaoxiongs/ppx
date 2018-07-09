@@ -5,7 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.paopaoxiong.ppx.authorization.UserInfoUtil;
 import com.paopaoxiong.ppx.common.ResultInfo;
 import com.paopaoxiong.ppx.common.SystemLogOperation;
+import com.paopaoxiong.ppx.model.system.Role;
 import com.paopaoxiong.ppx.model.system.User;
+import com.paopaoxiong.ppx.service.system.RoleService;
 import com.paopaoxiong.ppx.service.system.UserService;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
@@ -13,6 +15,8 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -21,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/sys/user")
 public class UserController {
 
@@ -31,8 +35,15 @@ public class UserController {
     @Autowired
     private UserService userService;
     //
+    @Autowired
+    private RoleService roleService;
 
-    @RequestMapping("/page")
+    @GetMapping("/page")
+    public String user(Model model) {
+        return "system/user/user";
+    }
+
+    @RequestMapping("/pageList")
     public ModelAndView list(){
         ModelAndView mav = new ModelAndView();
         Map<String,Object> map = new HashMap<String,Object>();
@@ -50,49 +61,110 @@ public class UserController {
      * @param pageSize
      * @return
      */
-    @PostMapping("/userList")
-    public ResultInfo getUserDataList(User user,
+    @GetMapping("/list")
+    @ResponseBody
+    public Map<String,Object> getUserDataList(User user,
                                       @RequestParam(required = false, defaultValue = "1") int pageIndex,
                                       @RequestParam(required = false, defaultValue = "10") int pageSize){
-        ResultInfo resultInfo = new ResultInfo();
+        Map<String,Object> resultInfo = new HashMap<>();
         try {
+            List<User> users  = userService.queryAllUser(user);
+            int total = users.size();
             PageHelper.startPage(pageIndex,pageSize);
-            List<User> list = userService.queryAllUser(user);
-            PageInfo<User> pageInfo = new PageInfo<>(list);
-            resultInfo.setData(pageInfo);
-            resultInfo.setSuccess(true);
-            resultInfo.setMessage("成功");
+            List<User> pageInfo = userService.queryAllUser(user);
+            resultInfo.put("rows",pageInfo);
+            resultInfo.put("total",total);
         }catch (Exception e){
-            resultInfo.setSuccess(false);
-            resultInfo.setData(Collections.EMPTY_LIST);
-            resultInfo.setMessage("失败");
+
         }
         return resultInfo;
     }
 
+    /**
+     * 添加用户
+     * @param model
+     * @return
+     */
+    @GetMapping("/add")
+    String add(Model model) {
+        List<Role> roles = roleService.queryAllRole(null);
+        model.addAttribute("roles", roles);
+        return "system/user/add";
+    }
+
+    /**
+     * 新增时，验证用户名是否存在
+     * @param params
+     * @return
+     */
+    @PostMapping("/exit")
+    @ResponseBody
+    public boolean exit(@RequestParam Map<String, Object> params) {
+        return !userService.exit(params);// 存在，不通过，false
+    }
+
     @SystemLogOperation(module = "系统管理-用户管理",description = "新增用户")
-    @PostMapping(value = "/addUser", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    @PostMapping(value = "/save")
     public ResultInfo addUser(User user) {
         ResultInfo resultInfo = new ResultInfo();
-        User currentUser = UserInfoUtil.CurrentUserInfo();
-
         user.setPassword(DEFAULT_PASSWORD);
         UserEncry userEncry = new UserEncry();
         userEncry.encrypt(user);
-        user.setStatus(1);
-
-        //user.setCreateUser(currentUser.getId().toString());
-        //user.setUpdateUser(currentUser.getId().toString());
         try{
             userService.add(user);
             resultInfo.setSuccess( true );
-            resultInfo.setData( Collections.EMPTY_LIST );
-            resultInfo.setMessage( "成功" );
+            resultInfo.setCode(200);
+            resultInfo.setMessage( "操作成功" );
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             resultInfo.setSuccess(false);
-            resultInfo.setData(Collections.EMPTY_LIST);
-            resultInfo.setMessage("失败");
+            resultInfo.setMessage("操作失败");
+        }
+        return resultInfo;
+    }
+
+    /**
+     * 编辑用户
+     * @param model
+     * @param id
+     * @return
+     */
+    @GetMapping("/edit/{id}")
+    public String edit(Model model, @PathVariable("id") Integer id) {
+        User user = userService.get(id);
+        model.addAttribute("user", user);
+        List<Role> roles = roleService.getRoleListByUserId(id);
+        model.addAttribute("roles", roles);
+        return "system/user/editRole";
+    }
+
+    @PostMapping("/update")
+    @ResponseBody
+    public ResultInfo update(User user) {
+        ResultInfo resultInfo = new ResultInfo();
+        try{
+            userService.update(user);
+            resultInfo.setCode(200);
+            resultInfo.setMessage( "操作成功" );
+        } catch (Exception e) {
+            resultInfo.setSuccess(false);
+            resultInfo.setMessage("操作失败");
+        }
+
+        return resultInfo;
+    }
+
+    @PostMapping("/remove")
+    @ResponseBody
+    public ResultInfo remove(Integer id) {
+        ResultInfo resultInfo = new ResultInfo();
+        try{
+            userService.delete(id);
+            resultInfo.setCode(200);
+            resultInfo.setMessage( "操作成功" );
+        } catch (Exception e) {
+            resultInfo.setSuccess(false);
+            resultInfo.setMessage("操作失败");
         }
         return resultInfo;
     }

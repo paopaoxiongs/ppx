@@ -23,7 +23,6 @@ public class RetryProcessExceptionInterceptor {
             System.out.println("null="+object.getClass());
             Field field = object.getClass().getDeclaredField("userService");
             field.setAccessible(true);
-            //ThreadLocal<AtomicInteger> threadLocal = (ThreadLocal<AtomicInteger>) field.get(object);
             MethodSignature methodSignature = (MethodSignature) point.getSignature();
             RetryProcess retryProcess = methodSignature.getMethod().getAnnotation(RetryProcess.class);
             int count = 0;

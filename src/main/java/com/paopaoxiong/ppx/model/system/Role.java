@@ -2,6 +2,7 @@ package com.paopaoxiong.ppx.model.system;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class Role implements Serializable{
 
@@ -22,6 +23,8 @@ public class Role implements Serializable{
     private String updateUser;
 
     private Date updateTime;
+
+    private List<Integer> menuIds;
 
     public Integer getId() {
         return id;
@@ -93,6 +96,14 @@ public class Role implements Serializable{
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public List<Integer> getMenuIds() {
+        return menuIds;
+    }
+
+    public void setMenuIds(List<Integer> menuIds) {
+        this.menuIds = menuIds;
     }
 }
 

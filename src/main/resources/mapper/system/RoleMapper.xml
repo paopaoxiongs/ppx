@@ -69,4 +69,52 @@
     <delete id="delete" parameterType="java.lang.Integer">
       DELETE  FROM  sys_role WHERE  id = #{id}
     </delete>
+
+    <insert id="save" keyProperty="id" useGeneratedKeys="true" parameterType="com.paopaoxiong.ppx.model.system.Role" >
+        INSERT INTO sys_role
+        (
+        role_name,
+        role_sign,
+        remark,
+        status,
+        create_user,
+        create_time,
+        update_user,
+        update_time
+        )
+        VALUES
+        (
+        #{roleName},
+        #{roleSign},
+        #{remark},
+        #{status},
+        #{createUser},
+        sysdate(),
+        #{updateUser},
+        sysdate()
+        )
+    </insert>
+
+    <select id="get" parameterType="java.lang.Integer" resultMap="RoleResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM sys_role
+        WHERE id = #{id}
+    </select>
+
+    <update id="update" parameterType="com.paopaoxiong.ppx.model.system.Role">
+        UPDATE sys_role SET
+        <trim suffixOverrides=",">
+            role_name = #{roleName},
+            role_sign = #{roleSign},
+            remark = #{remark},
+            status = #{status},
+            create_user = #{createUser},
+            create_time = #{createTime},
+            update_user = #{updateUser},
+            update_time = #{updateTime}
+        </trim>
+        where id = #{id}
+    </update>
+
 </mapper>

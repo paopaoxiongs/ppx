@@ -21,7 +21,7 @@ public class TreeBuildFactory {
         List<TreeNode> list = new ArrayList<>();
         for (Menu menu: menuList){
             TreeNode treeNode = new TreeNode();
-            treeNode.setId(menu.getId());
+            treeNode.setId(menu.getMenuId());
             treeNode.setName(menu.getName());
             treeNode.setParentId(menu.getParentId());
             treeNode.setUrl(menu.getUrl());
@@ -105,10 +105,12 @@ public class TreeBuildFactory {
      */
     public TreeNode findRoot() {
         for (TreeNode treeNode : getTreeNodes()) {
-            if (null == treeNode.getParentId()) {
+            if (0 == treeNode.getParentId()) {
                 return treeNode;
             }
         }
         return null;
     }
+
+
 }

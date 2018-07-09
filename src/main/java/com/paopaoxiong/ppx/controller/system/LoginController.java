@@ -7,6 +7,7 @@ import com.paopaoxiong.ppx.model.system.Role;
 import com.paopaoxiong.ppx.model.system.User;
 import com.paopaoxiong.ppx.service.system.MenuService;
 import com.paopaoxiong.ppx.service.system.UserService;
+import com.paopaoxiong.ppx.utils.ShiroUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -15,19 +16,14 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-@RestController
-@RequestMapping("/sys")
+@Controller
+@RequestMapping
 public class LoginController {
 
     @Autowired
@@ -36,6 +32,11 @@ public class LoginController {
     @Autowired
     private MenuService menuService;
 
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
     /**
      * 登录接口
      * @param account
@@ -43,7 +44,8 @@ public class LoginController {
      * @param rememberMe
      * @return
      */
-    @RequestMapping("/login")
+    @PostMapping("/login")
+    @ResponseBody
     public ResultInfo login(@RequestParam(value = "account") String account,
                             @RequestParam(value = "password") String password,
                             @RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe){
@@ -62,7 +64,12 @@ public class LoginController {
             //角色信息
             List<Role> roles = user.getRoles();
             data.put("roles",roles);
-            List<Menu> menuList = menuService.queryAllMenuByUserId(user.getId());
+            List<Menu> menuList = new ArrayList<>();
+            if("admin".equals(account)){//超级管理员
+                menuList = menuService.queryAllMenuByUserId(user.getId());
+            }else {
+                menuList = menuService.queryAllMenuByUserId(user.getId());
+            }
             session.setAttribute(UserInfoUtil.USER_PERMISSION, menuList);
             data.put("permissions", menuList);
             resultInfo.setSuccess(true);
@@ -95,24 +102,13 @@ public class LoginController {
     }
 
     /**
-     * 退出接口
+     * 退出登录
      * @return
      */
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ResultInfo logout() {
-        ResultInfo resultInfo = new ResultInfo();
-        Subject subject = SecurityUtils.getSubject();
-        try {
-            subject.logout();
-            resultInfo.setSuccess(true);
-            resultInfo.setData(Collections.EMPTY_LIST);
-            resultInfo.setMessage("成功");
-        } catch (Exception e) {
-            resultInfo.setSuccess(false);
-            resultInfo.setData(Collections.EMPTY_LIST);
-            resultInfo.setMessage("失败");
-        }
-        return resultInfo;
+    @GetMapping("/logout")
+    public String logout() {
+        ShiroUtils.logout();
+        return "redirect:/login";
     }
 
 }

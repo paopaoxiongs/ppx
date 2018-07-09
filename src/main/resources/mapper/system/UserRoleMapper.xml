@@ -39,4 +39,20 @@
         <include refid="query_where_condition"/>
     </select>
 
+    <delete id="removeByUserId" parameterType="java.lang.Integer">
+        DELETE FROM  sys_user_role WHERE user_id = #{id}
+    </delete>
+
+    <insert id="batchSave" parameterType="java.util.List">
+        INSERT INTO
+        sys_user_role(user_id,role_id,status,create_user,create_time,update_user,update_time)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userId},#{item.roleId},#{item.status},#{item.createUser},#{item.createTime},#{item.updateUser},#{item.updateTime})
+        </foreach>
+    </insert>
+
+    <select id="getRoleIdListByUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT role_id FROM sys_user_role where user_id=#{userId}
+    </select>
 </mapper>

@@ -1,12 +1,13 @@
 package com.paopaoxiong.ppx.common;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 树model
  */
-public class TreeNode {
+public class TreeNode implements Serializable{
 
     private Integer id;
 

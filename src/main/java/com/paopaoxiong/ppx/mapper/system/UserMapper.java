@@ -13,4 +13,10 @@ public interface UserMapper {
     public User queryUserByAccount(String account);
 
     public void add(User user);
+
+    public User get(Integer userId);
+
+    public void update(User user);
+
+    public void delete(Integer userId);
 }

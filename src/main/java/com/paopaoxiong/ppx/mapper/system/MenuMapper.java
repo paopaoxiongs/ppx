@@ -16,4 +16,6 @@ public interface MenuMapper {
     public Menu getMenuById(Integer id);
 
     public void delete(Integer id);
+
+    public  void update(Menu menu);
 }

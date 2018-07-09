@@ -32,6 +32,8 @@ public class User implements Serializable{
 
     private List<Role> roles;
 
+    private List<Integer> roleIds;
+
     public Integer getId() {
         return id;
     }
@@ -134,5 +136,13 @@ public class User implements Serializable{
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public List<Integer> getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(List<Integer> roleIds) {
+        this.roleIds = roleIds;
     }
 }

@@ -13,4 +13,10 @@ public interface RoleMapper {
     public void add(Role role);
 
     public void delete(Integer id);
+
+	public int save(Role role);
+
+	public Role get(Integer id);
+
+	public void update(Role role);
 }

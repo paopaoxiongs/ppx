@@ -25,7 +25,7 @@ import java.util.Map;
  * @Date 2017/11/17
  *
  */
-//@Configuration
+@Configuration
 public class ShiroConfiguration {
 
     /**
@@ -97,8 +97,8 @@ public class ShiroConfiguration {
     public ShiroFilterFactoryBean shiroFilterFactoryBean() {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(defaultSecurityManager());
-        shiroFilterFactoryBean.setLoginUrl("/login.html");
-        shiroFilterFactoryBean.setSuccessUrl("/index.html");
+        shiroFilterFactoryBean.setLoginUrl("/login");
+        shiroFilterFactoryBean.setSuccessUrl("/index");
         shiroFilterFactoryBean.setUnauthorizedUrl("/login.html");
 
         Map<String, Filter> filters = new LinkedHashMap<>();
@@ -108,8 +108,8 @@ public class ShiroConfiguration {
         shiroFilterFactoryBean.setFilters(filters);
 
         Map<String, String> filterChainDefinitionManager = new LinkedHashMap<>();
-        filterChainDefinitionManager.put("/login.html", "anon");
-        filterChainDefinitionManager.put("/logout.html", "logout");
+       /* filterChainDefinitionManager.put("/login.html", "anon");
+        filterChainDefinitionManager.put("/logout.html", "logout");*/
         filterChainDefinitionManager.put("/css/**", "anon");
         filterChainDefinitionManager.put("/js/**", "anon");
         filterChainDefinitionManager.put("/fonts/**", "anon");
